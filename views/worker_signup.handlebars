@@ -1,0 +1,17 @@
+<h2>Worker Sign Up</h2>
+<form action="/worker/signup" method="POST">
+    Worker ID: <input type="text" name="worker_id" placeholder="Enter Worker ID"> <br>
+    Worker Name: <input type="text" name="worker_name" placeholder="Enter Worker Name"> <br>
+    Phone No.: <input type="number" name="worker_phone" placeholder="Enter Phone Number"> <br>
+    Alternate Phone No.: <input type="number" name="worker_altphone" placeholder="Enter Phone Number"> <br>
+    Aadhaar No.: <input type="text" name="worker_aadhaar" placeholder="Enter Aadhaar"> <br>
+    Password: <input type="password" name="worker_pwd" placeholder="***********"> <br>
+    Age: <input type="number" name="worker_age" placeholder="Enter Age"> <br>
+    Gender: <input type="radio" id="male" name="worker_gender" value="male">
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="worker_gender" value="female">
+        <label for="female">Female</label>
+        <input type="radio" id="other" name="worker_gender" value="other">
+        <label for="other">Other</label> <br />
+    <button type="submit" name="worker-signup">Sign Up</button>
+</form>

@@ -1,0 +1,27 @@
+<h2>Jobs Posted</h2>
+<h3>Employee Id: {{emp_id}}</h3> <br>
+<button type="button"><a href="/employer/jobs">Your Jobs</a></button>
+<button type="button"><a href="/employer/requests">Requests</a></button>
+<button type="button"><a href="/employer/confirmed">Confirmed</a></button>
+<a href="/employer/logout">Logout</a><br>
+<table>
+    <tr>
+        <th>EmpID</th>
+        <th>Type of Work</th>
+        <th>Duration</th>
+        <th>Wage</th>
+        <th>Location</th>
+    </tr>
+    {{#each jobsposted1}}
+    <tr>
+        <td>{{this.emp_id}}</td>
+        <td>{{this.type_work}}</td>
+        <td>{{this.duration.days}} Days, {{this.duration.months}} Months</td>
+        <td>{{this.wage}}</td>
+        <td>{{this.location}}</td>
+    </tr>
+    {{/each}}
+</table>
+<br>
+<button type="button"><a href="/employer/addjob">Add Jobs</a></button><br><br>
+<br>
