@@ -1,6 +1,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars');
 const session = require('express-session');
+const path = require('path');
 var MongoClient = require('mongodb').MongoClient;
 var bodyParser = require("body-parser");
 var ObjectID = require('mongodb').ObjectID;
@@ -14,10 +15,338 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true})); 
 app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
+app.use(express.static(path.join(__dirname, '/public')));
 
 const PORT = process.env.PORT || 5000;
 var sess;
 var wsess;
+
+app.get('/', (req, res) => {
+    res.sendFile('index.html', {
+        root: path.join(__dirname, './')
+    })
+})
+
+
+app.get('/center/login', (req, res) => {
+    sess=req.session;
+    if(sess.emp_id)
+    {
+        res.redirect('/center/home');
+    }
+    else
+    {
+        res.render('center_login');
+    }
+});
+app.post('/center/login', (req, res) => {
+    sess=req.session;
+    var center_id = req.body.center_id;
+    var center_pwd = req.body.center_pwd;
+    MongoClient.connect(url, (err, db) => {
+        if(err) throw err;
+        var dbo = db.db("migrants");
+        var query = {center_id: center_id};
+        dbo.collection("center").find(query).toArray((err, result) => {
+            if(result.length<1)
+            {
+                console.log("Wrong center_id!");
+                res.render('center_login');
+            }
+            else if(result[0].center_pwd != center_pwd)
+            {
+                console.log("Wrong Pwd!");
+                res.render('center_login');
+            }
+            else if(result[0].center_pwd == center_pwd)
+            {
+                sess.center_id=center_id;
+                sess.center_name=result[0].center_name;
+                res.redirect('/center/home');
+            }
+        });
+    });
+});
+
+app.get('/center/forgotpwd', (req, res) => {
+    sess=req.session;
+    if(sess.center_id)
+    {
+        res.redirect('/center/home');
+    }
+    else
+    {
+        res.render('center_forgotpwd');
+    }
+});
+app.post('/center/forgotpwd', (req, res) => {
+    var center_id = req.body.center_id;
+    var center_aadhaar = req.body.center_aadhaar;
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err;
+        var dbo = db.db("migrants");
+        var query = {center_id: center_id};
+        dbo.collection("center").find(query).toArray((err, result) => {
+            if(result.length<1)
+            {
+                console.log("Wrong center_id!");
+                res.render('center_forgotpwd');
+            }
+            else if(result[0].center_id!=center_id || result[0].center_aadhaar!=center_aadhaar)
+            {
+                console.log("Wrong Details!");
+                res.render('center_forgotpwd');
+            }
+            else if(result[0].center_id==center_id && result[0].center_aadhaar == center_aadhaar)
+            {
+                res.send(result[0].center_pwd);
+            }
+        })
+    })
+})
+
+
+app.get('/center/signup', (req, res) => {
+    sess=req.session;
+    if(sess.emp_id)
+    {
+        res.redirect('/center/home');
+    }
+    else
+    {
+        res.render('center_signup');
+    }
+});
+app.post('/center/signup', (req, res, next) => {
+    var temp = {
+        center_id: req.body.center_id,
+        center_name: req.body.center_name,
+        center_phone: req.body.center_phone,
+        center_address: req.body.center_address,
+        center_aadhaar: req.body.center_aadhaar,
+        center_pwd: req.body.center_pwd,
+        center_email: req.body.center_email,
+        center_gender: req.body.center_gender
+    };
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err;
+        var dbo = db.db("migrants");
+        var query = {center_id:req.body.center_id};
+        dbo.collection("center").find(query).toArray( (err, result) => {
+            if(err) throw err;
+            if(result.length == 0)
+            {
+                dbo.collection("center").insertOne(temp, (err,result2) => {
+                    if(err) throw err;
+                    console.log("1 center inserted!");
+                    res.redirect('/center/login');
+                });
+            }
+            else {
+                console.log("center already exists!");
+                res.redirect('/center/signup');
+            }
+        })
+    });
+});
+
+app.get('/center/home', (req, res) => {
+    sess=req.session;
+    if(sess.center_id)
+    {
+        res.render('center_home');
+    }
+    else
+    {
+        res.render('center_login');
+    }
+});
+
+app.get('/center/employer/signup', (req, res) => {
+    sess=req.session;
+    if(sess.center_id)
+    {
+        res.render('center_employer_signup');
+    }
+    else
+    {
+        res.redirect('/center/login');
+    }
+});
+app.post('/center/employer/signup', (req, res, next) => {
+    var temp = {
+        emp_id: req.body.emp_id,
+        emp_name: req.body.emp_name,
+        emp_phone: req.body.emp_phone,
+        emp_address: req.body.emp_address,
+        emp_aadhaar: req.body.emp_aadhaar,
+        emp_pwd: req.body.emp_pwd,
+        emp_email: req.body.emp_email,
+        emp_gender: req.body.emp_gender
+    };
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err;
+        var dbo = db.db("migrants");
+        var query = {emp_id:req.body.emp_id};
+        dbo.collection("employers").find(query).toArray( (err, result) => {
+            if(err) throw err;
+            if(result.length == 0)
+            {
+                dbo.collection("employers").insertOne(temp, (err,result2) => {
+                    if(err) throw err;
+                    console.log("1 employer inserted!");
+                    res.redirect('/center/employer/signup');
+                });
+            }
+            else {
+                console.log("Emp_id already exists!");
+                res.redirect('/center/employer/signup');
+            }
+        })
+    });
+});
+
+app.get('/center/worker/signup', (req, res) => {
+    wsess = req.session;
+    if(wsess.center_id)
+    {
+        res.render('center_worker_signup');
+    }
+    else
+    {
+        res.redirect('/center/login');
+    }
+});
+app.post('/center/worker/signup', (req, res, next) => {
+    var temp = {
+        worker_id: req.body.worker_id,
+        worker_name: req.body.worker_name,
+        worker_phone: req.body.worker_phone,
+        worker_altphone: req.body.worker_altphone,
+        worker_aadhaar: req.body.worker_aadhaar,
+        worker_pwd: req.body.worker_pwd,
+        worker_age: req.body.worker_age,
+        worker_gender: req.body.worker_gender
+    };
+    MongoClient.connect(url, (err, db) => {
+        if (err) throw err;
+        var dbo = db.db("migrants");
+        var query = {worker_id:req.body.worker_id};
+        dbo.collection("workers").find(query).toArray( (err, result) => {
+            if(err) throw err;
+            if(result.length == 0)
+            {
+                dbo.collection("workers").insertOne(temp, (err,result2) => {
+                    if(err) throw err;
+                    console.log("1 worker inserted!");
+                    res.jsonp({success : true})
+                    res.redirect('/center/worker/signup');
+                });
+            }
+            else {
+                console.log("Worker_id already exists!");
+                res.redirect('/center/worker/signup');
+            }
+        })
+    });
+});
+
+app.get('/center/jobs_posted', (req, res) => {
+    sess=req.session;
+    if(sess.center_id)
+    {
+        var jobsposted;
+        MongoClient.connect(url, (err, db) => {
+            if (err) throw err;
+            var dbo = db.db("migrants");
+            dbo.collection("applications").find().toArray((err, result) => {
+                if(result.length == 0)
+                {
+                    res.render('center_jobs_posted_null');
+                }
+                else
+                {
+                    jobsposted = result;
+                    res.render('center_total_jobs_posted',{jobsposted1: jobsposted});
+                }
+                
+            })
+        })
+    }
+    else{
+        res.redirect('/center/login');
+    }
+});
+
+app.get('/center/worker_applied', (req, res) => {
+    wsess = req.session;
+    if(wsess.center_id)
+    {
+        var final;
+        MongoClient.connect(url, (err, db) => {
+            if (err) throw err;
+            var dbo = db.db("migrants");
+            var query = {confirm: "no"};
+            dbo.collection("jobs").find(query).toArray((err, result) => {
+                if(result.length == 0)
+                {
+                    res.render('center_workers_applied_null');
+                }
+                else
+                {
+                    final = result;
+                    var l = result.length;
+
+                    res.render('center_total_worker_applied',{final: final});
+                }
+                
+            })
+        })
+    }
+    else{
+        res.redirect('/center/login');
+        res.end();
+    }
+});
+
+app.get('/center/worker_confirmed', (req, res) => {
+    wsess = req.session;
+    if(wsess.center_id)
+    {
+        var final;
+        MongoClient.connect(url, (err, db) => {
+            if (err) throw err;
+            var dbo = db.db("migrants");
+            var query = {confirm: "yes"};
+            dbo.collection("jobs").find(query).toArray((err, result) => {
+                if(result.length == 0)
+                {
+                    res.render('center_workers_confirmed_null');
+                }
+                else
+                {
+                    final = result;
+                    var l = result.length;
+
+                    res.render('center_total_worker_confirmed',{final: final});
+                }
+                
+            })
+        })
+    }
+    else{
+        res.redirect('/center/login');
+        res.end();
+    }
+});
+
+app.get('/center/logout',(req,res) => {
+    req.session.destroy((err) => {
+        if(err) return console.log(err);
+        res.redirect('/center/login');
+    });
+});
+
 
 app.get('/employer/login', (req, res) => {
     sess=req.session;
@@ -456,7 +785,7 @@ app.get('/worker/jobs', (req, res) => {
                         if(arr.length>0 && l1!=0)
                         {
                             console.log("here job>0");
-                            console.log(arr);
+                            //console.log(arr);
                             res.render('worker_jobs', {worker: wsess.worker_id, workername: wsess.worker_name, jobsposted: arr});
                         }
                         else if(arr.length==0 && l1!=0)

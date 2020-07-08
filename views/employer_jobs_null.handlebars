@@ -1,11 +1,13 @@
-<h2>Jobs Posted</h2>
-<h3>Employee Id: {{emp_id}}</h3>
+<div class="container" style="top:70px;">
+<header>
+<h1>Posted Jobs </h1>
+<h3>Employer Id: {{emp_id}}</h3>
+</header>
 <br>
-<button type="button"><a href="/employer/jobs">Your Jobs</a></button>
-<button type="button"><a href="/employer/requests">Requests</a></button>
-<button type="button"><a href="/employer/confirmed">Confirmed</a></button
-<a href="/employer/logout">Logout</a>><br>
-<h4>No Jobs Posted Yet !!!</h4>
 <br>
-<button type="button"><a href="/employer/addjob">Add Jobs</a></button><br><br>
 <br>
+<div style="text-align:center"><h1>No Jobs posted Yet!</h1></div>
+<div style="text-align:center"><a href="/employer/addjob"><button type="button" class="butt butt1" id="submit">Post Jobs</button></a></div>
+<div style="text-align:center"><a href="/employer/requests"><button type="button" class="butt butt1" id="submit">Go to Job Requests</button></a></div>
+<div style="text-align:center"><a href="/employer/confirmed"><button type="button" class="butt butt1" id="submit">Go to Confirmed Jobs</button></a></div>
+<div style="text-align:center"><a href="/employer/logout"><button type="button" class="butt butt1" id="submit">Log Out!</button></a></div>

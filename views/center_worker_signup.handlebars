@@ -27,13 +27,13 @@
                 } 
             } 
         </script> 
-
 <div class="container" style="top:70px;">
 			<header>
 				<h1>Worker Sign-Up</h1>
-            </header>       
+            </header> 
       <div  class="form">
-    		<form id="contactform" action="/worker/signup" onsubmit="checkPassword(this)" method="POST">
+    		<form id="contactform" action="/center/worker/signup" onsubmit="checkPassword(this)" method="POST">
+				
 				<p class="contact"><label for="worker_id"></label>
 				<input id="worker_id" name="worker_id" placeholder="Enter Worker ID" required="" type="text">
 				
@@ -42,6 +42,7 @@
  
 				<p class="contact"><label for="worker_phone">Mobile phone</label></p> 
 				<input id="phone" name="worker_phone" placeholder="Phone number" minlength="10" required="" type="text"> <br> 
+				
 				<p class="contact"><label for="worker_altphone">Alternate Mobile phone</label></p> 
 				<input id="phone" name="worker_altphone" placeholder="Alternate phone number" minlength="10" required="" type="text"> <br> 
 
@@ -63,16 +64,19 @@
             <option value="other">Other</option>
             </select><br><br>
             
-            <input class="buttom" name="worker-signup" id="submit" tabindex="5" value="Sign me up!" type="submit"> 	 
+            <input class="buttom" id="submit" name="worker-signup" tabindex="5" value="Sign me up!" type="submit">
    </form> 
-</div>   
-</div>  
+</div>
+<br>
+<div style="text-align:center">
+<a href="/center/home"><button class="butt butt1" type="button">Center Home Page</button></a>
+</div> 
+</div>
+			
+			
 
-
-
-
-<!--<h2>Worker Sign Up</h2>
-<form action="/worker/signup" method="POST">
+<!--
+<form action="/center/worker/signup" method="POST">
     Worker ID: <input type="text" name="worker_id" placeholder="Enter Worker ID"> <br>
     Worker Name: <input type="text" name="worker_name" placeholder="Enter Worker Name"> <br>
     Phone No.: <input type="number" name="worker_phone" placeholder="Enter Phone Number"> <br>
@@ -87,4 +91,6 @@
         <input type="radio" id="other" name="worker_gender" value="other">
         <label for="other">Other</label> <br />
     <button type="submit" name="worker-signup">Sign Up</button>
+    <button type="button"><a href="/center/home">Home Page</a></button>
 </form>-->
+

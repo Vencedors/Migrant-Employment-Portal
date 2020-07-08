@@ -1,10 +1,12 @@
-<h2>Requests Page </h2>
-<h3>Employee Id: {{emp_id}}</h3>
+<div class="container" style="top:70px;">
+<header>
+<h1>Job Requets </h1>
+<h3>Employer Id: {{emp_id}}</h3>
+</header>
 <br>
-<button type="button"><a href="/employer/jobs">Your Jobs</a></button>
-<button type="button"><a href="/employer/requests">Requests</a></button>
-<button type="button"><a href="/employer/confirmed">Confirmed</a></button>
-<a href="/employer/logout">Logout</a>
 <br>
-<h4>No Requests received Yet !!!</h4>
 <br>
+<div style="text-align:center"><h1>No Requests received Yet!</h1></div>
+<div style="text-align:center"><a href="/employer/confirmed"><button type="button" class="butt butt1" id="submit">Go to confirmed jobs</button></a></div>
+<div style="text-align:center"><a href="/employer/jobs"><button type="button" class="butt butt1" id="submit">Go to posted Jobs</button></a></div>
+<div style="text-align:center"><a href="/employer/logout"><button type="button" class="butt butt1" id="submit">Log Out!</button></a></div>

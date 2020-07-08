@@ -1,10 +1,14 @@
-<h2>Jobs Posted</h2>
-<h3>Employee Id: {{emp_id}}</h3> <br>
-<button type="button"><a href="/employer/jobs">Your Jobs</a></button>
-<button type="button"><a href="/employer/requests">Requests</a></button>
-<button type="button"><a href="/employer/confirmed">Confirmed</a></button>
-<a href="/employer/logout">Logout</a><br>
-<table>
+<div class="container" style="top:70px;">
+<header>
+<h1>Jobs Posted</h2>
+<h3>Employer Id {{emp_id}}</h3> <br>
+</header>
+<a href="/employer/jobs"><button type="button" class="butt butt1" id="submit">Posted Jobs</button></a>
+<a href="/employer/requests"><button type="button" class="butt butt1" id="submit">Requests</button></a>
+<a href="/employer/confirmed"><button type="button" class="butt butt1" id="submit">Confirmed</button></a>
+<a href="/employer/logout"><button style="float:right" type="button" class="butt butt1" id="submit">Logout</button></a>
+<table class="custom">
+<thead>
     <tr>
         <th>EmpID</th>
         <th>Type of Work</th>
@@ -12,6 +16,8 @@
         <th>Wage</th>
         <th>Location</th>
     </tr>
+	</thead>
+	<tbody>
     {{#each jobsposted1}}
     <tr>
         <td>{{this.emp_id}}</td>
@@ -21,7 +27,9 @@
         <td>{{this.location}}</td>
     </tr>
     {{/each}}
+	</tbody>
 </table>
 <br>
-<button type="button"><a href="/employer/addjob">Add Jobs</a></button><br><br>
+<div align="center" ><a href="/employer/addjob"><button type="button" class="butt butt1" id="submit">Add Jobs</button></a></div><br><br>
 <br>
+</div>
